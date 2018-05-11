@@ -10,7 +10,7 @@ import time
 from GetDouYinImg import *
 
 def get_token(host):
-    header_dict = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Trident/7.0; rv:11.0) like Gecko',"Content-Type": "application/json"}
+    header_dict = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36', "Content-Type": "application/json"}
     req = request.Request(url=host,headers=header_dict)
     res = request.urlopen(req)
     res = res.read()
@@ -31,30 +31,30 @@ def get_info_post_json_data(url,value):
     res = res.read()
     return (res.decode('utf-8'))
 
-'''
-调用百度API，进行人脸探测
-imgPath：图片的地址
-access_token：开发者token
-'''
+
+
 def getBaiDuFaceTech(imgPath,access_token):
-    request_url = "https://aip.baidubce.com/rest/2.0/face/v1/detect"
+    request_url = "https://aip.baidubce.com/rest/2.0/face/v3/detect"
     # 二进制方式打开图片文件
     f = open(imgPath, 'rb')
     # 图片转换为base64
     img = base64.b64encode(f.read())
-    params = {"face_fields":"age,beauty,expression,faceshape,gender,glasses,landmark,race,qualities","image":img,"max_face_num":5}
-    params=urllib.parse.urlencode(params).encode(encoding='utf-8')
+    params = {"image":img, "image_type":"BASE64","face_field":"age,beauty,expression,faceshape,gender,glasses,landmark,race,quality,facetype,parsing","image":img,"max_face_num":2}
+    params = urllib.parse.urlencode(params).encode(encoding='utf-8')
     request_url = request_url + "?access_token=" + access_token
     #调用post请求方法
     face_info = get_info_post_json_data(request_url,params)
+    
     #json字符串转对象
     face_json = json.loads(face_info)
+    # print(face_json)
     #如果没有发现人像，会返回空
-    if face_json["result_num"]==0:
+    if face_json['error_code'] > 0:
         face_dict={}
     else:
         #把想要的部分提取存入字典中
-        result = face_json['result'][0]
+        result = face_json['result']['face_list'][0]
+        # result = face_list['face_list']
         gender = result['gender']
         age = str(result['age'])
         race = str(result['race'])
@@ -78,7 +78,7 @@ def faceInfoAnalysis(face_dict):
             if(float(face_dict["beauty"])>40 and float(face_dict["age"])>18):
                 #点赞
                 click_like()
-                print("好可爱ヽ(✿ﾟ▽ﾟ)ノ 已喜欢❤")
+                print("卡哇伊ヽ(✿ﾟ▽ﾟ)ノ 已喜欢❤！！！")
                 #点赞后休息一秒，主要为能够看到点击爱心的效果
             else:
                 print("再看看(๑•̀ㅂ•́)و✧")

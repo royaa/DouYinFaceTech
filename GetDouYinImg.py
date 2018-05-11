@@ -1,3 +1,5 @@
+# encoding:utf-8
+
 import os
 
 from PIL import Image
@@ -10,8 +12,8 @@ SIZE_more_small = 2.0
 #adb手机截图
 def getDouYinImg():
     #截图
-    os.system("adb shell /system/bin/screencap -p /sdcard/screenshot.jpg")
-    os.system("adb pull /sdcard/screenshot.jpg face.jpg")
+    os.system("adb shell /system/bin/screencap -p /sdcard/DCIM/Camera/screenshot.jpg")
+    os.system("adb pull /sdcard/DCIM/Camera/screenshot.jpg face.jpg")
     #压缩图片
     img = Image.open("face.jpg").convert('RGB')
     scale = SIZE_small
@@ -21,11 +23,10 @@ def getDouYinImg():
 
 #点小爱心
 def click_like():
-    os.system("adb shell input tap 1076 1078")#点击事件，一加3
-    # os.system("adb shell input tap 1476 1394")  # 点击事件，小米平板2
+    os.system("adb shell input tap 641 648")#点击事件，小米2
 
 
 #下滑新的视频
 def switch_video():
-    os.system("adb shell input swipe 540 1300 540 500 100")
+    os.system("adb shell input swipe 540 1000 200 200")
 
