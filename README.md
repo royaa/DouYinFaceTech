@@ -5,7 +5,8 @@
 <!--more-->
 
 
-![](https://github.com/tomxin7/DouYinFaceTech/raw/master/20180418_000727.gif)
+![](https://github.com/jevonszmx/DouYinFaceTech/raw/master/20180418_000727.gif)
+
 ## 原理说明
 
 ##### 本程序与抖音无关，主要供学习用途
@@ -13,6 +14,7 @@
 1. 将手机打开抖音的推荐视频界面
 
 2. 用 ADB 工具获取当前手机截图，并用 ADB 将截图 pull 上来
+
 ```shell
 
 adb shell screencap -p /sdcard/autojump.png
@@ -21,7 +23,6 @@ adb pull /sdcard/autojump.png .
 ```
 
 3. 将图片进行压缩,并调用[百度人脸识别API](http://ai.baidu.com/tech/face)
-
 
 4. 获得百度返回的数据进行判断分析
 
@@ -76,5 +77,40 @@ Douyin.py中替换token的host链接
 DouYinFaceTech目录下直接运行Douyin.py
 ```
 
+#### adb相关
 
-参考：<h1 align="center"><a href="http://blog.tomxin.cn" target="_blank">Tomxin7 的旧版本</a></h1>
+adb获取不同分辨率手机坐标的方法：
+
+adb事件可以使用以下命令查看：
+
+```
+
+adb shell getevent -p
+
+```
+
+其中：0035、0036就是点击事件
+
+那么我们开启：
+
+```
+
+adb shell getevent | grep -e "0035" -e "0036"
+
+```
+
+然后再点击抖音点赞，得到如下的数字：
+
+```
+
+/dev/input/event0: 0003 0035 00000341
+/dev/input/event0: 0003 0036 000008ec
+
+```
+
+再把0035和0036后面的位置数据从16进制转化为10进制，就是想要的坐标了。
+
+
+#### 参考/鸣谢
+
+[Tomxin7](http://blog.tomxin.c)
